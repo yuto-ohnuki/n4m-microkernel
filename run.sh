@@ -18,14 +18,14 @@ CC=/opt/homebrew/opt/llvm/bin/clang
 #   --target=riscv32: 32 bit RISC-V 用にコンパイル
 #   -ffreestanding: ホスト環境の標準ライブラリを使用しない
 #   -nostdlib: 標準ライブラリをリンクしない
-CFLANGS="-std=c11 -O2 -g3 -Wall -Wextra --target=riscv32 -ffreestanding -nostdlib"
+CFLAGS="-std=c11 -O2 -g3 -Wall -Wextra --target=riscv32 -ffreestanding -nostdlib"
 
 # カーネルのビルド
 # Args:
 #   -Wl,-Tkernel.ld: リンカスクリプトを指定する
 #   -Wl,-Map=kernel.map: マップファイルを出力する
-$CC $CFLANGS -Wl,-Tkernel.ld -Wl,-Map=kernel.map -o kernel.elf \
-  kernel.c
+$CC $CFLAGS -Wl,-Tkernel.ld -Wl,-Map=kernel.map -o kernel.elf \
+  kernel.c common.c
 
 # QEMU の起動
 # Args:

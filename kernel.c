@@ -1,4 +1,5 @@
 #include "kernel.h"
+#include "common.h"
 
 typedef unsigned char uint8_t;
 typedef unsigned int uint32_t;
@@ -20,7 +21,7 @@ struct sbiret sbi_call(long arg0, long arg1, long arg2, long arg3, long arg4, lo
 
     // インラインアセンブラで ecall 命令を実行
     // CPU 実行モードを kernel (S-Mode) から OpenSBI (M-Mode) へと切り替え
-    __asm__ __volatile("ecall"
+    __asm__ __volatile__("ecall"
         : "=r"(a0), "=r"(a1)
         : "r"(a0), "r"(a1), "r"(a2), "r"(a3), "r"(a4), "r"(a5), "r"(a6), "r"(a7)
         : "memory"
@@ -40,12 +41,10 @@ void *memset(void *buf, char c, size_t n){
     return buf;
 }
 
-void kernel_main(void){
-    const char *s = "\n\nHello World!\n";
-    for (int i = 0; s[i] != '\0'; i++){
-        putchar(s[i]);
-    }
-    for (;;){
+void kernel_main(void) {
+    printf("\n\nHello %s\n", "World!");
+    printf("1 + 2 = %d, %x\n", 1 + 2, 0x1234abcd);
+    for (;;) {
         __asm__ __volatile__("wfi");
     }
 }
