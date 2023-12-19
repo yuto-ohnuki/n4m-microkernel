@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 set -xue
 
 # PID
@@ -36,3 +36,5 @@ $CC $CFLAGS -Wl,-Tkernel.ld -Wl,-Map=kernel.map -o kernel.elf \
 #   --no-reboot: クラッシュ時には、再起動せずに停止
 $QEMU -machine virt -bios default -nographic -serial mon:stdio --no-reboot \
   -kernel kernel.elf
+
+# /opt/homebrew/Cellar/llvm/17.0.6/bin
