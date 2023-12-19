@@ -1,12 +1,14 @@
 #! /bin/bash
 set -xue
 
+# PID
+echo "PID: $$"
+
 # QEMU　file path
-QEMU=qemu-system-riscv32`
+QEMU=qemu-system-riscv32
 
 # clang path
 CC=/opt/homebrew/opt/llvm/bin/clang
-
 
 # Args:
 #   -std=c11: C11 の使用
