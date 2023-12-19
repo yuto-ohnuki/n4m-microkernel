@@ -25,7 +25,7 @@ CFLAGS="-std=c11 -O2 -g3 -Wall -Wextra --target=riscv32 -ffreestanding -nostdlib
 #   -Wl,-Tkernel.ld: リンカスクリプトを指定する
 #   -Wl,-Map=kernel.map: マップファイルを出力する
 $CC $CFLAGS -Wl,-Tkernel.ld -Wl,-Map=kernel.map -o kernel.elf \
-  kernel.c common.c
+  kernel.c
 
 # QEMU の起動
 # Args:
@@ -34,7 +34,7 @@ $CC $CFLAGS -Wl,-Tkernel.ld -Wl,-Map=kernel.map -o kernel.elf \
 #   -nographic: QEMU をウィンドウなしで起動
 #   -serial mon:stdio: QEMU の標準入出力を仮想マシンのシリアルポートに接続
 #   --no-reboot: クラッシュ時には、再起動せずに停止
+
 $QEMU -machine virt -bios default -nographic -serial mon:stdio --no-reboot \
   -kernel kernel.elf
 
-# /opt/homebrew/Cellar/llvm/17.0.6/bin
