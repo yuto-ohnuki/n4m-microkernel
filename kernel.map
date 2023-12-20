@@ -1,14 +1,14 @@
      VMA      LMA     Size Align Out     In      Symbol
        0        0 80200000     1 . = 0x80200000
 80200000 80200000       4c     2 .text
-80200000 80200000        e     2         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-e027f2.o:(.text.boot)
+80200000 80200000        e     2         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-b52340.o:(.text.boot)
 80200000 80200000        0     1                 
 80200000 80200000        0     1                 
 80200000 80200000        0     1                 
 80200000 80200000        e     1                 boot
 8020000e 8020000e        0     1                 
 8020000e 8020000e        0     1                 
-8020000e 8020000e       3e     2         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-e027f2.o:(.text)
+8020000e 8020000e       3e     2         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-b52340.o:(.text)
 8020000e 8020000e        0     1                 
 8020000e 8020000e        0     1                 
 8020000e 8020000e        0     1                 
@@ -58,18 +58,18 @@
 8020004c 8020004c    20000     1 . += 128 * 1024
 8022004c 8022004c        0     1 __stack_top = .
        0        0       e7     1 .debug_loc
-       0        0       e7     1         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-e027f2.o:(.debug_loc)
+       0        0       e7     1         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-b52340.o:(.debug_loc)
        0        0        0     1                 
       3c       3c        0     1                 
       71       71        0     1                 
       a2       a2        0     1                 
       bd       bd        0     1                 
        0        0       da     1 .debug_abbrev
-       0        0       da     1         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-e027f2.o:(.debug_abbrev)
+       0        0       da     1         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-b52340.o:(.debug_abbrev)
        0        0      121     1 .debug_info
-       0        0      121     1         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-e027f2.o:(.debug_info)
+       0        0      121     1         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-b52340.o:(.debug_info)
        0        0       18     1 .debug_ranges
-       0        0       18     1         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-e027f2.o:(.debug_ranges)
+       0        0       18     1         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-b52340.o:(.debug_ranges)
        0        0        0     1                 
        0        0       ab     1 .debug_str
        0        0       ab     1         <internal>:(.debug_str)
@@ -78,10 +78,10 @@
        0        0       2b     1 .riscv.attributes
        0        0       2b     1         <internal>:(.riscv.attributes)
        0        0       44     4 .debug_frame
-       0        0       44     4         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-e027f2.o:(.debug_frame)
+       0        0       44     4         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-b52340.o:(.debug_frame)
        0        0        0     1                 
        0        0       c3     1 .debug_line
-       0        0       c3     1         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-e027f2.o:(.debug_line)
+       0        0       c3     1         /var/folders/ld/x3ntbd5x0fn1653qnpmkyf080000gn/T/kernel-b52340.o:(.debug_line)
        0        0        0     1                 .Lline_table_start0
        0        0      480     4 .symtab
        0        0      480     4         <internal>:(.symtab)
