@@ -43,7 +43,6 @@ void *memset(void *buf, char c, size_t n){
 
 void kernel_main(void) {
     printf("\n\nHello %s\n", "World!");
-    printf("1 + 2 = %d, %x\n", 1 + 2, 0x1234abcd);
     for (;;) {
         __asm__ __volatile__("wfi");
     }
@@ -52,7 +51,7 @@ void kernel_main(void) {
 // 最初に起動する関数。
 // リンカスクリプトで用意したスタック領域の末尾アドレスをスタックポインタ (sp) に設定し、
 // kernel_main関数へジャンプ
-__attribute__((section(",text.boot")))
+__attribute__((section(".text.boot")))
 __attribute__((naked))
 void boot(void) {
     __asm__ __volatile__(

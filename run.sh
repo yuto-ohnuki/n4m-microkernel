@@ -1,9 +1,6 @@
 #!/bin/bash
 set -xue
 
-# PID
-echo "PID: $$"
-
 # QEMU　file path
 QEMU=qemu-system-riscv32
 
