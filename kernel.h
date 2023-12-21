@@ -1,6 +1,10 @@
 #pragma once
 #include "common.h"
 
+#define PROCS_MAX 8     // 最大プロセス数
+#define PROC_UNUSED 0   // 未使用のプロセス管理構造体
+#define PROC_RUNNABLE 1     // 実行可能なプロセス
+
 // 例外処理で使うマクロ
 struct trap_frame {
     uint32_t ra;
@@ -40,6 +44,14 @@ struct trap_frame {
 struct sbiret {
     long error;
     long value;
+};
+
+// プロセス
+struct process{
+    int pid;    // プロセス ID
+    int state;  // プロセスの状態
+    vaddr_t sp;     // コンテキストスイッチ時のスタックポインタ
+    uint8_t stack[8192];    // カーネルスタック
 };
 
 // CSR レジスタの読み書きを行うためのマクロ
