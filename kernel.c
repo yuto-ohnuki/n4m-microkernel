@@ -15,6 +15,8 @@ struct process procs[PROCS_MAX];
 // プロセス
 struct process *proc_a;
 struct process *proc_b;
+struct process *current_proc;   // 現在実行中のプロセス
+struct process *idle_proc;     // アイドルプロセス
 
 // OpenSBI を呼び出す関数
 struct sbiret sbi_call(long arg0, long arg1, long arg2, long arg3, long arg4, long arg5, long fid, long eid){
@@ -128,7 +130,7 @@ void kernel_entry(void){
     __asm__ __volatile__(
 
         // sscratch レジスタに、例外発生時のスタックポインタを保存
-        "csrw sscratch, sp\n"
+        "csrrw sp, sscratch, sp\n"
         "addi sp, sp, -4 * 31\n"
         "sw ra,  4 * 0(sp)\n"
         "sw gp,  4 * 1(sp)\n"
@@ -161,9 +163,13 @@ void kernel_entry(void){
         "sw s10, 4 * 28(sp)\n"
         "sw s11, 4 * 29(sp)\n"
 
-        // 例外発生時の復元
+        // 例外発生時のspを取り出して復元
         "csrr a0, sscratch\n"
         "sw a0, 4 * 30(sp)\n"
+
+        // カーネルスタックを設定し直す
+        "addi a0, sp, 4*31\n"
+        "csrw sscratch, a0\n"
 
         // a0 レジスタにスタックポインタをセット
         "mv a0, sp\n"
@@ -241,6 +247,37 @@ __attribute__((naked)) void switch_context(uint32_t *prev_sp, uint32_t *next_sp)
     );
 }
 
+// スケジューラ
+void yield(void){
+    // 実行可能なプロセスを探す
+    struct process *next = idle_proc;
+    for(int i=0; i<PROCS_MAX; i++){
+        struct process *proc = &procs[(current_proc->pid + i) % PROCS_MAX];
+        if(proc->state == PROC_RUNNABLE && proc->pid > 0){
+            next = proc;
+            break;
+        }
+    }
+
+    // 現在実行中のプロセス以外に、実行可能なプロセスがない場合。処理を続行
+    if (next == current_proc){
+        return;
+    }
+
+    // 例外ハンドラの修正
+    // プロセス切り替え時に sscratch レジスタへと、実行中プロセスのカーネルスタックの初期値を設定
+    __asm__ __volatile__(
+        "csrw sscratch, %[sscratch]\n"
+        :
+        : [sscratch] "r" ((uint32_t) &next->stack[sizeof(next->stack)])
+    );
+
+    // コンテキストスイッチ
+    struct process *prev = current_proc;
+    current_proc = next;
+    switch_context(&prev->sp, &next->sp);
+}
+
 // プロセス A のエントリポイント
 void proc_a_entry(void){
     printf("starting process A\n");
@@ -248,7 +285,7 @@ void proc_a_entry(void){
     while (1){
         // 1 文字表示したらコンテキストスイッチ
         putchar('A');
-        switch_context(&proc_a->sp, &proc_b->sp);
+        yield();
 
         for(int i=0; i<100; i++){
             // nop: 何もしない命令
@@ -264,7 +301,7 @@ void proc_b_entry(void){
     while (1){
         // 1 文字表示したらコンテキストスイッチ
         putchar('B');
-        switch_context(&proc_b->sp, &proc_a->sp);
+        yield();
 
         for(int i=0; i<100; i++){
             // nop: 何もしない命令
@@ -276,12 +313,19 @@ void proc_b_entry(void){
 void kernel_main(void) {
     // printf("\n\nHello %s\n", "World!");
     memset(__bss, 0, (size_t) __bss_end - (size_t) __bss);
+    printf("\n\n");
 
     WRITE_CSR(stvec, (uint32_t) kernel_entry);
 
+    idle_proc = create_process((uint32_t) NULL);
+    idle_proc->pid = -1;    // idle
+
+    // ブート処理の実行コンテキストを、アイドルプロセスのコンテキストとして保存・復元
+    current_proc = idle_proc;
+
     proc_a = create_process((uint32_t) proc_a_entry);
     proc_b = create_process((uint32_t) proc_b_entry);
-    proc_a_entry();
 
-    PANIC("unreachable here!");
+    yield();
+    PANIC("switchied to idle process!");
 }
