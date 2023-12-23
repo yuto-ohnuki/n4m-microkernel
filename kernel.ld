@@ -3,6 +3,9 @@ ENTRY(boot)
 SECTIONS {
     . = 0x80200000;
 
+    /* カーネルが利用するアドレスの先頭を定義 */
+    __kernel_base = .;
+
     .text :{
         KEEP(*(.text.boot));
         *(.text .text.*);

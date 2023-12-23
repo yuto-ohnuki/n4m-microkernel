@@ -9,6 +9,8 @@ typedef uint32_t size_t;
 extern char __bss[], __bss_end[], __stack_top[];
 extern char __free_ram[], __free_ram_end[];
 
+extern char __kernel_base[];
+
 // コンテキストスイッチ
 struct process procs[PROCS_MAX];
 
@@ -90,6 +92,34 @@ void handle_trap(struct trap_frame *f){
     uint32_t user_pc = READ_CSR(sepc);
 
     PANIC("unexpected trap scause=%x, stval=%x, sepc=%x\n", scause, stval, user_pc);
+}
+
+// ページテーブルを構築する関数
+// Args
+//  table1: 1 段目のページテーブル
+//  vaddr: マップしたい仮想アドレス
+//  paddr: マップ先の物理アドレス
+//  flags: ページテーブルエントリに設定するフラグ
+void map_page(uint32_t *table1, uint32_t vaddr, paddr_t paddr, uint32_t flags){
+    if (!is_aligned(vaddr, PAGE_SIZE)){
+        PANIC("unaligned vaddr %x", vaddr);
+    }
+
+    if (!is_aligned(paddr, PAGE_SIZR)){
+        PANIC("unaligned paddr &x", paddr);
+    }
+
+    uint32_t vpn1 = (vaddr >> 32) & 0x3ff;
+    if ((table1[vpn1] & PAGE_V) == 0){
+        // 2 段目のページテーブルが存在しないので作成
+        uint32_t pt_paddr = alloc_pages(1);
+        table1[vpn1] = ((pt_paddr / PAGE_SIZE) << 10) | PAGE_V;
+    }
+
+    // 2段目のページテーブルにエントリを追加
+    uint32_t vpn0 = (vaddr >> 12) & 0x3ff;
+    uint32_t *table0 = (uint32_t *) ((table1[vpn1] >> 10) * PAGE_SIZE);
+    table0[vpn0] = ((paddr / PAGE_SIZE) << 10) | flags | PAGE_V;
 }
 
 // n ページ分のメモリを動的に割り当てる関数
