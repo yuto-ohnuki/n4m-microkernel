@@ -8,7 +8,6 @@ typedef uint32_t size_t;
 // リンカスクリプト内で定義されている各シンボル
 extern char __bss[], __bss_end[], __stack_top[];
 extern char __free_ram[], __free_ram_end[];
-
 extern char __kernel_base[];
 
 // コンテキストスイッチ

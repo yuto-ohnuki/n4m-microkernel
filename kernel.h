@@ -58,7 +58,7 @@ struct process{
     int pid;    // プロセス ID
     int state;  // プロセスの状態
     vaddr_t sp;     // コンテキストスイッチ時のスタックポインタ
-    uint32_t *page_table;
+    uint32_t *page_table;    // 1 段目のページテーブルを指すポインタ
     uint8_t stack[8192];    // カーネルスタック
 };
 
